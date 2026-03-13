@@ -368,7 +368,7 @@
   .organ-glow.active { animation: organPulse 2s ease-in-out infinite; }
 </style>
 <script>
-  try { AOS.init({ duration: 550, once: true, easing: 'ease-out-cubic' }); } catch(e) {}
+  try { AOS.init({ duration: 550, once: true, easing: 'ease-out-cubic' }); } catch(e) { console.warn('AOS initialization skipped:', e.message); }
 
   /* ── Interactive Organ Map ── */
   const organStatusMap = JSON.parse(document.getElementById('organ-status-map').textContent || '{}');
@@ -462,7 +462,12 @@
       var organName = row.getAttribute('data-organ');
       showOrganDetail(organName);
       var g = document.querySelector('.organ-region[data-organ="' + organName + '"]');
-      if (g) g.querySelectorAll('.organ-shape').forEach(function(s) { s.setAttribute('opacity', '1'); s.style.filter = 'brightness(1.3)'; });
+      if (g) {
+        g.querySelectorAll('.organ-shape').forEach(function(s) {
+          s.setAttribute('opacity', '1');
+          s.style.filter = 'brightness(1.3)';
+        });
+      }
     });
     row.addEventListener('mouseleave', function() {
       clearOrganDetail();
