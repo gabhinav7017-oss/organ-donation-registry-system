@@ -3,68 +3,72 @@
 {% block page_title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="mb-3">
-  <a href="{% url 'recipient_list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Recipients</a>
-</div>
-<div class="card shadow-sm" style="max-width:760px">
-  <div class="card-header fw-semibold"><i class="bi bi-person-add me-2 text-success"></i>{{ title }}</div>
-  <div class="card-body">
+<a href="{% url 'recipient_list' %}" class="back-link"><i class="bi bi-arrow-left"></i> Back to Recipients</a>
+
+<div class="card" style="max-width:780px">
+  <div class="card-header d-flex align-items-center gap-2">
+    <span class="d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success" style="width:32px;height:32px">
+      <i class="bi bi-person-add"></i>
+    </span>
+    {{ title }}
+  </div>
+  <div class="card-body p-4">
     <form method="post" novalidate>
       {% csrf_token %}
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label fw-semibold">First Name</label>
+          <label class="form-label">First Name</label>
           {{ form.first_name }}
-          {% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors }}</div>{% endif %}
+          {% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Last Name</label>
+          <label class="form-label">Last Name</label>
           {{ form.last_name }}
-          {% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors }}</div>{% endif %}
+          {% if form.last_name.errors %}<div class="text-danger small mt-1">{{ form.last_name.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Date of Birth</label>
+          <label class="form-label">Date of Birth</label>
           {{ form.date_of_birth }}
-          {% if form.date_of_birth.errors %}<div class="text-danger small">{{ form.date_of_birth.errors }}</div>{% endif %}
+          {% if form.date_of_birth.errors %}<div class="text-danger small mt-1">{{ form.date_of_birth.errors }}</div>{% endif %}
         </div>
         <div class="col-md-3">
-          <label class="form-label fw-semibold">Blood Type</label>
+          <label class="form-label">Blood Type</label>
           {{ form.blood_type }}
-          {% if form.blood_type.errors %}<div class="text-danger small">{{ form.blood_type.errors }}</div>{% endif %}
+          {% if form.blood_type.errors %}<div class="text-danger small mt-1">{{ form.blood_type.errors }}</div>{% endif %}
         </div>
         <div class="col-md-3">
-          <label class="form-label fw-semibold">Status</label>
+          <label class="form-label">Status</label>
           {{ form.status }}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Email</label>
+          <label class="form-label">Email</label>
           {{ form.email }}
-          {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+          {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Phone</label>
+          <label class="form-label">Phone</label>
           {{ form.phone }}
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold">Address</label>
+          <label class="form-label">Address</label>
           {{ form.address }}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Organ Needed</label>
+          <label class="form-label">Organ Needed</label>
           {{ form.organ_needed }}
-          {% if form.organ_needed.errors %}<div class="text-danger small">{{ form.organ_needed.errors }}</div>{% endif %}
+          {% if form.organ_needed.errors %}<div class="text-danger small mt-1">{{ form.organ_needed.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Urgency Level</label>
+          <label class="form-label">Urgency Level</label>
           {{ form.urgency }}
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold">Medical Notes <span class="text-muted fw-normal">(optional)</span></label>
+          <label class="form-label">Medical Notes <span class="text-muted fw-normal">(optional)</span></label>
           {{ form.medical_notes }}
         </div>
       </div>
       <div class="mt-4 d-flex gap-2">
-        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Save</button>
+        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Save Recipient</button>
         <a href="{% url 'recipient_list' %}" class="btn btn-outline-secondary">Cancel</a>
       </div>
     </form>

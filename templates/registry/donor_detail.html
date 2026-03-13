@@ -4,10 +4,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <div>
-    <a href="{% url 'donor_list' %}" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-arrow-left"></i> Back</a>
-    <span class="fs-5 fw-bold">{{ donor.full_name }}</span>
-  </div>
+  <a href="{% url 'donor_list' %}" class="back-link mb-0"><i class="bi bi-arrow-left"></i> Back to Donors</a>
   <div>
     <a href="{% url 'donor_edit' donor.pk %}" class="btn btn-primary btn-sm"><i class="bi bi-pencil me-1"></i>Edit</a>
     <a href="{% url 'donor_delete' donor.pk %}" class="btn btn-danger btn-sm ms-1"><i class="bi bi-trash me-1"></i>Delete</a>
@@ -16,54 +13,72 @@
 
 <div class="row g-3">
   <div class="col-md-4">
-    <div class="card shadow-sm">
-      <div class="card-header fw-semibold"><i class="bi bi-person-circle me-2"></i>Personal Info</div>
+    <div class="card overflow-hidden">
+      <div class="profile-banner text-center pb-2">
+        <div class="d-flex align-items-center justify-content-center mx-auto mb-2"
+             style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;font-size:2rem">
+          <i class="bi bi-person-fill text-white"></i>
+        </div>
+        <div class="fs-5 fw-bold text-white">{{ donor.full_name }}</div>
+        <span class="badge bg-{% if donor.status == 'Active' %}success{% elif donor.status == 'Matched' %}warning text-dark{% else %}secondary{% endif %} mt-1">{{ donor.status }}</span>
+      </div>
       <div class="card-body">
-        <dl class="mb-0">
-          <dt class="text-muted small">Full Name</dt><dd>{{ donor.full_name }}</dd>
-          <dt class="text-muted small">Date of Birth</dt><dd>{{ donor.date_of_birth }}</dd>
-          <dt class="text-muted small">Blood Type</dt><dd><span class="badge bg-primary fs-6">{{ donor.blood_type }}</span></dd>
-          <dt class="text-muted small">Email</dt><dd>{{ donor.email }}</dd>
-          <dt class="text-muted small">Phone</dt><dd>{{ donor.phone }}</dd>
-          <dt class="text-muted small">Address</dt><dd>{{ donor.address }}</dd>
-          <dt class="text-muted small">Status</dt>
-          <dd><span class="badge bg-{% if donor.status == 'Active' %}success{% elif donor.status == 'Matched' %}warning text-dark{% else %}secondary{% endif %}">{{ donor.status }}</span></dd>
-          <dt class="text-muted small">Registered</dt><dd>{{ donor.registered_at|date:"M d, Y H:i" }}</dd>
+        <dl class="mb-0" style="font-size:.875rem">
+          <dt class="text-muted mb-1" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px">Blood Type</dt>
+          <dd class="mb-3"><span class="badge bg-primary fs-6">{{ donor.blood_type }}</span></dd>
+
+          <dt class="text-muted mb-1" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px">Date of Birth</dt>
+          <dd class="mb-3">{{ donor.date_of_birth }}</dd>
+
+          <dt class="text-muted mb-1" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px">Email</dt>
+          <dd class="mb-3">{{ donor.email }}</dd>
+
+          <dt class="text-muted mb-1" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px">Phone</dt>
+          <dd class="mb-3">{{ donor.phone }}</dd>
+
+          <dt class="text-muted mb-1" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px">Address</dt>
+          <dd class="mb-3">{{ donor.address }}</dd>
+
+          <dt class="text-muted mb-1" style="font-size:.72rem;text-transform:uppercase;letter-spacing:.5px">Registered</dt>
+          <dd class="mb-0">{{ donor.registered_at|date:"M d, Y H:i" }}</dd>
         </dl>
       </div>
     </div>
   </div>
+
   <div class="col-md-8">
-    <div class="card shadow-sm mb-3">
-      <div class="card-header fw-semibold"><i class="bi bi-heart-pulse me-2 text-danger"></i>Organs Willing to Donate</div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="bi bi-heart-pulse-fill me-2 text-danger"></i>Organs Willing to Donate</div>
       <div class="card-body">
         {% for organ in donor.organs %}
-          <span class="badge bg-danger me-1 mb-1 px-3 py-2 fs-6">{{ organ }}</span>
+          <span class="badge bg-danger me-1 mb-1 px-3 py-2">{{ organ }}</span>
         {% empty %}<span class="text-muted">None listed.</span>
         {% endfor %}
       </div>
     </div>
+
     {% if donor.medical_notes %}
-    <div class="card shadow-sm mb-3">
-      <div class="card-header fw-semibold"><i class="bi bi-file-medical me-2"></i>Medical Notes</div>
-      <div class="card-body"><p class="mb-0">{{ donor.medical_notes }}</p></div>
+    <div class="card mb-3">
+      <div class="card-header"><i class="bi bi-file-medical me-2"></i>Medical Notes</div>
+      <div class="card-body"><p class="mb-0" style="font-size:.875rem">{{ donor.medical_notes }}</p></div>
     </div>
     {% endif %}
-    <div class="card shadow-sm">
-      <div class="card-header fw-semibold"><i class="bi bi-diagram-3 me-2"></i>Matches</div>
+
+    <div class="card">
+      <div class="card-header"><i class="bi bi-diagram-3 me-2"></i>Matches</div>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
-          <thead class="table-light"><tr><th>Recipient</th><th>Organ</th><th>Status</th><th>Date</th><th></th></tr></thead>
+          <thead><tr><th>Recipient</th><th>Organ</th><th>Status</th><th>Date</th><th></th></tr></thead>
           <tbody>
             {% for m in matches %}
             <tr>
-              <td><a href="{% url 'recipient_detail' m.recipient.pk %}">{{ m.recipient.full_name }}</a></td>
-              <td>{{ m.organ }}</td>
+              <td><a href="{% url 'recipient_detail' m.recipient.pk %}" class="fw-semibold text-decoration-none">{{ m.recipient.full_name }}</a></td>
+              <td><span class="badge bg-danger">{{ m.organ }}</span></td>
               <td><span class="badge bg-{% if m.status == 'Completed' %}success{% elif m.status == 'Approved' %}primary{% elif m.status == 'Rejected' %}danger{% else %}warning text-dark{% endif %}">{{ m.status }}</span></td>
-              <td class="text-muted small">{{ m.matched_at|date:"M d, Y" }}</td>
+              <td class="text-muted">{{ m.matched_at|date:"M d, Y" }}</td>
               <td><a href="{% url 'match_detail' m.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a></td>
             </tr>
-            {% empty %}<tr><td colspan="5" class="text-muted text-center">No matches yet.</td></tr>
+            {% empty %}<tr><td colspan="5" class="text-center text-muted py-3">No matches yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>

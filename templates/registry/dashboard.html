@@ -1,6 +1,6 @@
 {% extends "registry/base.html" %}
 {% block title %}Dashboard — Organ Donation Registry{% endblock %}
-{% block page_title %}Hospital Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
 <!-- Stat Cards -->
@@ -9,11 +9,11 @@
     <div class="card stat-card donors shadow-sm">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
-          <div class="text-muted small">Total Donors</div>
-          <div class="fs-2 fw-bold text-primary">{{ total_donors }}</div>
-          <div class="small text-success">{{ active_donors }} active</div>
+          <div class="stat-label">Total Donors</div>
+          <div class="stat-value">{{ total_donors }}</div>
+          <div class="stat-sub"><i class="bi bi-circle-fill me-1" style="font-size:.55rem"></i>{{ active_donors }} active</div>
         </div>
-        <i class="bi bi-people-fill fs-1 text-primary opacity-25"></i>
+        <i class="bi bi-people-fill stat-icon"></i>
       </div>
     </div>
   </div>
@@ -21,11 +21,11 @@
     <div class="card stat-card recipients shadow-sm">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
-          <div class="text-muted small">Total Recipients</div>
-          <div class="fs-2 fw-bold text-success">{{ total_recipients }}</div>
-          <div class="small text-success">{{ active_recipients }} active</div>
+          <div class="stat-label">Total Recipients</div>
+          <div class="stat-value">{{ total_recipients }}</div>
+          <div class="stat-sub"><i class="bi bi-circle-fill me-1" style="font-size:.55rem"></i>{{ active_recipients }} active</div>
         </div>
-        <i class="bi bi-person-heart fs-1 text-success opacity-25"></i>
+        <i class="bi bi-person-heart stat-icon"></i>
       </div>
     </div>
   </div>
@@ -33,11 +33,11 @@
     <div class="card stat-card matches shadow-sm">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
-          <div class="text-muted small">Total Matches</div>
-          <div class="fs-2 fw-bold text-danger">{{ total_matches }}</div>
-          <div class="small text-muted">{{ completed_matches }} completed</div>
+          <div class="stat-label">Total Matches</div>
+          <div class="stat-value">{{ total_matches }}</div>
+          <div class="stat-sub"><i class="bi bi-check-circle-fill me-1" style="font-size:.55rem"></i>{{ completed_matches }} completed</div>
         </div>
-        <i class="bi bi-diagram-3-fill fs-1 text-danger opacity-25"></i>
+        <i class="bi bi-diagram-3-fill stat-icon"></i>
       </div>
     </div>
   </div>
@@ -45,11 +45,11 @@
     <div class="card stat-card pending shadow-sm">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
-          <div class="text-muted small">Pending Matches</div>
-          <div class="fs-2 fw-bold text-warning">{{ pending_matches }}</div>
-          <div class="small text-muted">awaiting approval</div>
+          <div class="stat-label">Pending Matches</div>
+          <div class="stat-value">{{ pending_matches }}</div>
+          <div class="stat-sub"><i class="bi bi-hourglass-split me-1" style="font-size:.55rem"></i>awaiting approval</div>
         </div>
-        <i class="bi bi-hourglass-split fs-1 text-warning opacity-25"></i>
+        <i class="bi bi-hourglass-split stat-icon"></i>
       </div>
     </div>
   </div>
@@ -58,32 +58,44 @@
 <!-- Urgency & Quick Actions -->
 <div class="row g-3 mb-4">
   <div class="col-md-5">
-    <div class="card shadow-sm h-100">
-      <div class="card-header fw-semibold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Active Recipients by Urgency</div>
+    <div class="card h-100">
+      <div class="card-header">
+        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Recipients by Urgency
+      </div>
       <div class="card-body">
         {% for level, count in urgency_stats.items %}
-        <div class="d-flex align-items-center mb-2">
-          <span class="badge badge-urgency-{{ level }} me-2" style="width:70px">{{ level }}</span>
-          <div class="flex-grow-1 me-2">
-            <div class="progress" style="height:10px">
+        <div class="d-flex align-items-center mb-3">
+          <span class="badge badge-urgency-{{ level }} me-3" style="width:72px;font-size:.72rem">{{ level }}</span>
+          <div class="flex-grow-1 me-3">
+            <div class="progress" style="height:8px">
               <div class="progress-bar bg-{% if level == 'Critical' %}danger{% elif level == 'High' %}warning{% elif level == 'Medium' %}info{% else %}success{% endif %}"
                    style="width: {% if active_recipients > 0 %}{% widthratio count active_recipients 100 %}{% else %}0{% endif %}%"></div>
             </div>
           </div>
-          <span class="fw-bold">{{ count }}</span>
+          <span class="fw-bold text-dark" style="min-width:20px;text-align:right">{{ count }}</span>
         </div>
         {% endfor %}
       </div>
     </div>
   </div>
   <div class="col-md-7">
-    <div class="card shadow-sm h-100">
-      <div class="card-header fw-semibold"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Quick Actions</div>
-      <div class="card-body d-flex flex-wrap gap-2 align-items-start">
-        <a href="{% url 'donor_create' %}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Register Donor</a>
-        <a href="{% url 'recipient_create' %}" class="btn btn-success"><i class="bi bi-person-add me-1"></i>Register Recipient</a>
-        <a href="{% url 'auto_match' %}" class="btn btn-danger"><i class="bi bi-magic me-1"></i>Run Auto-Match</a>
-        <a href="{% url 'match_list' %}" class="btn btn-outline-secondary"><i class="bi bi-diagram-3 me-1"></i>View All Matches</a>
+    <div class="card h-100">
+      <div class="card-header">
+        <i class="bi bi-lightning-charge-fill text-warning me-2"></i>Quick Actions
+      </div>
+      <div class="card-body d-flex flex-wrap gap-2 align-items-start pt-3">
+        <a href="{% url 'donor_create' %}" class="btn btn-primary">
+          <i class="bi bi-person-plus-fill me-1"></i>Register Donor
+        </a>
+        <a href="{% url 'recipient_create' %}" class="btn btn-success">
+          <i class="bi bi-person-add me-1"></i>Register Recipient
+        </a>
+        <a href="{% url 'auto_match' %}" class="btn btn-danger">
+          <i class="bi bi-stars me-1"></i>Run Auto-Match
+        </a>
+        <a href="{% url 'match_list' %}" class="btn btn-outline-secondary">
+          <i class="bi bi-diagram-3 me-1"></i>View All Matches
+        </a>
       </div>
     </div>
   </div>
@@ -92,22 +104,22 @@
 <!-- Recent Tables -->
 <div class="row g-3">
   <div class="col-lg-6">
-    <div class="card shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
-        <span><i class="bi bi-people me-2 text-primary"></i>Recent Donors</span>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-people-fill me-2 text-primary"></i>Recent Donors</span>
         <a href="{% url 'donor_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
       </div>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
-          <thead class="table-light"><tr><th>Name</th><th>Blood</th><th>Status</th></tr></thead>
+          <thead><tr><th>Name</th><th>Blood</th><th>Status</th></tr></thead>
           <tbody>
             {% for d in recent_donors %}
             <tr>
-              <td><a href="{% url 'donor_detail' d.pk %}" class="text-decoration-none">{{ d.full_name }}</a></td>
+              <td><a href="{% url 'donor_detail' d.pk %}" class="fw-semibold text-decoration-none">{{ d.full_name }}</a></td>
               <td><span class="badge bg-primary">{{ d.blood_type }}</span></td>
-              <td><span class="badge bg-{% if d.status == 'Active' %}success{% elif d.status == 'Matched' %}warning{% else %}secondary{% endif %}">{{ d.status }}</span></td>
+              <td><span class="badge bg-{% if d.status == 'Active' %}success{% elif d.status == 'Matched' %}warning text-dark{% else %}secondary{% endif %}">{{ d.status }}</span></td>
             </tr>
-            {% empty %}<tr><td colspan="3" class="text-muted text-center">No donors yet.</td></tr>
+            {% empty %}<tr><td colspan="3" class="text-center text-muted py-3">No donors yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -115,22 +127,22 @@
     </div>
   </div>
   <div class="col-lg-6">
-    <div class="card shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <span><i class="bi bi-person-heart me-2 text-success"></i>Recent Recipients</span>
         <a href="{% url 'recipient_list' %}" class="btn btn-sm btn-outline-success">View All</a>
       </div>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
-          <thead class="table-light"><tr><th>Name</th><th>Organ</th><th>Urgency</th></tr></thead>
+          <thead><tr><th>Name</th><th>Organ</th><th>Urgency</th></tr></thead>
           <tbody>
             {% for r in recent_recipients %}
             <tr>
-              <td><a href="{% url 'recipient_detail' r.pk %}" class="text-decoration-none">{{ r.full_name }}</a></td>
-              <td>{{ r.organ_needed }}</td>
+              <td><a href="{% url 'recipient_detail' r.pk %}" class="fw-semibold text-decoration-none">{{ r.full_name }}</a></td>
+              <td><span class="badge bg-danger">{{ r.organ_needed }}</span></td>
               <td><span class="badge badge-urgency-{{ r.urgency }}">{{ r.urgency }}</span></td>
             </tr>
-            {% empty %}<tr><td colspan="3" class="text-muted text-center">No recipients yet.</td></tr>
+            {% empty %}<tr><td colspan="3" class="text-center text-muted py-3">No recipients yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -138,24 +150,24 @@
     </div>
   </div>
   <div class="col-12">
-    <div class="card shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
-        <span><i class="bi bi-diagram-3 me-2 text-danger"></i>Recent Matches</span>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-diagram-3-fill me-2 text-danger"></i>Recent Matches</span>
         <a href="{% url 'match_list' %}" class="btn btn-sm btn-outline-danger">View All</a>
       </div>
       <div class="table-responsive">
         <table class="table table-hover mb-0">
-          <thead class="table-light"><tr><th>Donor</th><th>Recipient</th><th>Organ</th><th>Status</th><th>Date</th></tr></thead>
+          <thead><tr><th>Donor</th><th>Recipient</th><th>Organ</th><th>Status</th><th>Date</th></tr></thead>
           <tbody>
             {% for m in recent_matches %}
             <tr>
-              <td><a href="{% url 'donor_detail' m.donor.pk %}" class="text-decoration-none">{{ m.donor.full_name }}</a></td>
-              <td><a href="{% url 'recipient_detail' m.recipient.pk %}" class="text-decoration-none">{{ m.recipient.full_name }}</a></td>
-              <td>{{ m.organ }}</td>
-              <td><span class="badge bg-{% if m.status == 'Completed' %}success{% elif m.status == 'Approved' %}primary{% elif m.status == 'Rejected' %}danger{% else %}warning{% endif %}">{{ m.status }}</span></td>
-              <td class="text-muted small">{{ m.matched_at|date:"M d, Y" }}</td>
+              <td><a href="{% url 'donor_detail' m.donor.pk %}" class="fw-semibold text-decoration-none">{{ m.donor.full_name }}</a></td>
+              <td><a href="{% url 'recipient_detail' m.recipient.pk %}" class="fw-semibold text-decoration-none">{{ m.recipient.full_name }}</a></td>
+              <td><span class="badge bg-danger">{{ m.organ }}</span></td>
+              <td><span class="badge bg-{% if m.status == 'Completed' %}success{% elif m.status == 'Approved' %}primary{% elif m.status == 'Rejected' %}danger{% else %}warning text-dark{% endif %}">{{ m.status }}</span></td>
+              <td class="text-muted">{{ m.matched_at|date:"M d, Y" }}</td>
             </tr>
-            {% empty %}<tr><td colspan="5" class="text-muted text-center">No matches yet.</td></tr>
+            {% empty %}<tr><td colspan="5" class="text-center text-muted py-3">No matches yet.</td></tr>
             {% endfor %}
           </tbody>
         </table>
