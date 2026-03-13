@@ -4,75 +4,366 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Organ Donation Registry{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <style>
-    body { background-color: #f4f6f9; }
-    .sidebar { min-height: 100vh; background: #1a3a5c; }
-    .sidebar .nav-link { color: #cdd9e5; padding: .6rem 1.2rem; border-radius: 6px; margin: 2px 8px; }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active { background: #e74c3c; color: #fff; }
-    .sidebar .brand { color: #fff; font-size: 1.2rem; font-weight: 700; padding: 1.2rem; border-bottom: 1px solid #2c5282; }
-    .sidebar .nav-section { color: #7fa3c4; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: .8rem 1.4rem .3rem; }
-    .content-area { padding: 2rem; }
-    .stat-card { border-left: 4px solid; border-radius: 8px; }
-    .stat-card.donors { border-color: #2980b9; }
-    .stat-card.recipients { border-color: #27ae60; }
-    .stat-card.matches { border-color: #e74c3c; }
-    .stat-card.pending { border-color: #f39c12; }
-    .badge-urgency-Critical { background-color: #e74c3c; }
-    .badge-urgency-High { background-color: #e67e22; }
-    .badge-urgency-Medium { background-color: #f39c12; }
-    .badge-urgency-Low { background-color: #27ae60; }
-    .topbar { background: #fff; border-bottom: 1px solid #dee2e6; padding: .75rem 2rem; }
+    :root {
+      --sidebar-bg-start: #0d1f2d;
+      --sidebar-bg-end: #1a3a5c;
+      --sidebar-link: #a8c5e0;
+      --sidebar-section: #5a85a8;
+      --sidebar-hover-bg: rgba(255,255,255,0.1);
+      --sidebar-active-bg: rgba(255,255,255,0.15);
+      --sidebar-active-border: #4db8ff;
+      --accent: #e53935;
+      --accent-hover: #c62828;
+      --page-bg: #f0f4f8;
+      --card-radius: 12px;
+      --topbar-height: 58px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--page-bg);
+      color: #2d3748;
+      font-size: 0.92rem;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      min-height: 100vh;
+      width: 248px;
+      min-width: 248px;
+      background: linear-gradient(175deg, var(--sidebar-bg-start) 0%, var(--sidebar-bg-end) 100%);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 1.3rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-brand .brand-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #e53935, #ff6b6b);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(229,57,53,0.4);
+    }
+    .sidebar-brand .brand-text {
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+    .sidebar-brand .brand-sub {
+      font-size: 0.65rem;
+      color: var(--sidebar-section);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-section-label {
+      color: var(--sidebar-section);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 1rem 1.25rem 0.3rem;
+    }
+
+    .sidebar .nav-link {
+      color: var(--sidebar-link);
+      padding: 0.55rem 1rem;
+      margin: 1px 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar .nav-link i { font-size: 1rem; flex-shrink: 0; }
+    .sidebar .nav-link:hover {
+      background: var(--sidebar-hover-bg);
+      color: #fff;
+      border-left-color: rgba(255,255,255,0.3);
+    }
+    .sidebar .nav-link.active {
+      background: var(--sidebar-active-bg);
+      color: #fff;
+      border-left-color: var(--sidebar-active-border);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 0.75rem 0.625rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 2rem;
+      height: var(--topbar-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1a202c;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.78rem;
+      color: #718096;
+      font-weight: 500;
+    }
+    .topbar-badge i { color: var(--accent); }
+
+    /* ── Content area ── */
+    .content-area { padding: 1.75rem 2rem; }
+
+    /* ── Cards ── */
+    .card {
+      border: none;
+      border-radius: var(--card-radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .card-header {
+      background: #fff;
+      border-bottom: 1px solid #edf2f7;
+      border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+      padding: 0.85rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .card-footer {
+      background: #f8fafc;
+      border-top: 1px solid #edf2f7;
+      border-radius: 0 0 var(--card-radius) var(--card-radius) !important;
+      font-size: 0.8rem;
+      color: #718096;
+      padding: 0.6rem 1.25rem;
+    }
+
+    /* ── Stat cards ── */
+    .stat-card {
+      border-radius: var(--card-radius) !important;
+      border: none !important;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important; }
+    .stat-card .card-body { padding: 1.4rem 1.5rem; }
+    .stat-card.donors  { background: linear-gradient(135deg, #1976d2, #42a5f5); color: #fff; }
+    .stat-card.recipients { background: linear-gradient(135deg, #00897b, #4db6ac); color: #fff; }
+    .stat-card.matches { background: linear-gradient(135deg, #e53935, #ef5350); color: #fff; }
+    .stat-card.pending { background: linear-gradient(135deg, #f57f17, #ffb300); color: #fff; }
+    .stat-card .stat-label { font-size: 0.78rem; font-weight: 500; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-value { font-size: 2.2rem; font-weight: 700; line-height: 1.1; margin: 0.2rem 0; }
+    .stat-card .stat-sub { font-size: 0.8rem; opacity: 0.8; }
+    .stat-card .stat-icon { font-size: 2.8rem; opacity: 0.25; }
+
+    /* ── Urgency badges ── */
+    .badge-urgency-Critical { background-color: #e53935 !important; }
+    .badge-urgency-High     { background-color: #e65100 !important; }
+    .badge-urgency-Medium   { background-color: #f57f17 !important; }
+    .badge-urgency-Low      { background-color: #2e7d32 !important; }
+
+    /* ── Tables ── */
+    .table { font-size: 0.875rem; }
+    .table thead th {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #718096;
+      background: #f8fafc;
+      border-bottom: 1px solid #edf2f7;
+      padding: 0.7rem 1rem;
+    }
+    .table tbody td { padding: 0.75rem 1rem; vertical-align: middle; border-bottom: 1px solid #f0f4f8; }
+    .table tbody tr:last-child td { border-bottom: none; }
+    .table-hover tbody tr:hover { background-color: #f8fafc; }
+
+    /* ── Buttons ── */
+    .btn { border-radius: 8px; font-weight: 500; font-size: 0.875rem; }
+    .btn-sm { border-radius: 6px; font-size: 0.8rem; }
+    .btn-primary   { background: #1976d2; border-color: #1976d2; }
+    .btn-primary:hover { background: #1565c0; border-color: #1565c0; }
+    .btn-success   { background: #00897b; border-color: #00897b; }
+    .btn-success:hover { background: #00796b; border-color: #00796b; }
+    .btn-danger    { background: #e53935; border-color: #e53935; }
+    .btn-danger:hover { background: #c62828; border-color: #c62828; }
+
+    /* ── Forms ── */
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 1.5px solid #e2e8f0;
+      font-size: 0.875rem;
+      padding: 0.5rem 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #4299e1;
+      box-shadow: 0 0 0 3px rgba(66,153,225,0.15);
+      outline: none;
+    }
+    .form-label { font-weight: 600; font-size: 0.82rem; color: #4a5568; margin-bottom: 0.3rem; }
+    .form-check-input:checked { background-color: #1976d2; border-color: #1976d2; }
+
+    /* ── Badges ── */
+    .badge { border-radius: 6px; font-weight: 600; font-size: 0.72rem; letter-spacing: 0.2px; }
+
+    /* ── Alerts ── */
+    .alert { border-radius: var(--card-radius); border: none; font-size: 0.875rem; }
+    .alert-info { background: #ebf8ff; color: #2b6cb0; }
+    .alert-success { background: #f0fff4; color: #276749; }
+    .alert-warning { background: #fffff0; color: #744210; }
+    .alert-danger  { background: #fff5f5; color: #c53030; }
+
+    /* ── Progress bars ── */
+    .progress { border-radius: 99px; background: rgba(0,0,0,0.06); }
+    .progress-bar { border-radius: 99px; }
+
+    /* ── Page header ── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .page-header h5 { font-size: 1.05rem; font-weight: 700; color: #1a202c; margin: 0; }
+
+    /* ── Profile header banner ── */
+    .profile-banner {
+      background: linear-gradient(135deg, #1a3a5c, #1976d2);
+      border-radius: var(--card-radius) var(--card-radius) 0 0;
+      padding: 1.5rem 1.5rem 1rem;
+      color: #fff;
+    }
+
+    /* ── Match suggestion card ── */
+    .match-card-header {
+      border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+    }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #718096;
+      text-decoration: none;
+      margin-bottom: 1rem;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: #2d3748; }
+
+    /* ── Scrollbar ── */
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
   </style>
 </head>
 <body>
 <div class="d-flex">
   <!-- Sidebar -->
-  <div class="sidebar d-flex flex-column" style="width:240px; min-width:240px;">
-    <div class="brand">
-      <i class="bi bi-heart-pulse-fill text-danger me-2"></i>OrganRegistry
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      <div>
+        <div class="brand-text">OrganRegistry</div>
+        <div class="brand-sub">Donation System</div>
+      </div>
     </div>
-    <nav class="flex-grow-1 pt-2">
-      <div class="nav-section">Main</div>
+
+    <nav class="flex-grow-1 pt-1">
+      <div class="nav-section-label">Main</div>
       <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        <i class="bi bi-grid-1x2-fill"></i>Dashboard
       </a>
-      <div class="nav-section">Donors</div>
+
+      <div class="nav-section-label">Donors</div>
       <a href="{% url 'donor_list' %}" class="nav-link {% if 'donor' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="bi bi-people me-2"></i>All Donors
+        <i class="bi bi-people-fill"></i>All Donors
       </a>
       <a href="{% url 'donor_create' %}" class="nav-link">
-        <i class="bi bi-person-plus me-2"></i>Register Donor
+        <i class="bi bi-person-plus-fill"></i>Register Donor
       </a>
-      <div class="nav-section">Recipients</div>
+
+      <div class="nav-section-label">Recipients</div>
       <a href="{% url 'recipient_list' %}" class="nav-link {% if 'recipient' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="bi bi-person-wheelchair me-2"></i>All Recipients
+        <i class="bi bi-person-wheelchair"></i>All Recipients
       </a>
       <a href="{% url 'recipient_create' %}" class="nav-link">
-        <i class="bi bi-person-add me-2"></i>Register Recipient
+        <i class="bi bi-person-add"></i>Register Recipient
       </a>
-      <div class="nav-section">Matching</div>
+
+      <div class="nav-section-label">Matching</div>
       <a href="{% url 'match_list' %}" class="nav-link {% if request.resolver_match.url_name == 'match_list' %}active{% endif %}">
-        <i class="bi bi-diagram-3 me-2"></i>All Matches
+        <i class="bi bi-diagram-3-fill"></i>All Matches
       </a>
       <a href="{% url 'auto_match' %}" class="nav-link {% if request.resolver_match.url_name == 'auto_match' %}active{% endif %}">
-        <i class="bi bi-magic me-2"></i>Auto-Match
+        <i class="bi bi-stars"></i>Auto-Match
       </a>
       <a href="{% url 'match_create' %}" class="nav-link">
-        <i class="bi bi-plus-circle me-2"></i>Create Match
+        <i class="bi bi-plus-circle-fill"></i>Create Match
       </a>
     </nav>
-    <div class="p-3 border-top" style="border-color:#2c5282 !important;">
-      <a href="/admin/" class="nav-link" target="_blank"><i class="bi bi-shield-lock me-2"></i>Admin Panel</a>
+
+    <div class="sidebar-footer">
+      <a href="/admin/" class="nav-link" target="_blank">
+        <i class="bi bi-shield-lock-fill"></i>Admin Panel
+      </a>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="flex-grow-1">
-    <div class="topbar d-flex align-items-center justify-content-between">
-      <h6 class="mb-0 fw-semibold text-muted">{% block page_title %}{% endblock %}</h6>
-      <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>Organ Donation Registry System</span>
+  <div class="flex-grow-1 d-flex flex-column" style="min-width:0">
+    <div class="topbar">
+      <span class="topbar-title">{% block page_title %}{% endblock %}</span>
+      <div class="topbar-right">
+        <div class="topbar-badge">
+          <i class="bi bi-heart-pulse-fill"></i>
+          Organ Donation Registry
+        </div>
+      </div>
     </div>
     <div class="content-area">
       {% if messages %}

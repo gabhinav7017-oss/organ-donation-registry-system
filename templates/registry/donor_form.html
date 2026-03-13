@@ -3,75 +3,79 @@
 {% block page_title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="mb-3">
-  <a href="{% url 'donor_list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Donors</a>
-</div>
-<div class="card shadow-sm" style="max-width:760px">
-  <div class="card-header fw-semibold"><i class="bi bi-person-plus me-2 text-primary"></i>{{ title }}</div>
-  <div class="card-body">
+<a href="{% url 'donor_list' %}" class="back-link"><i class="bi bi-arrow-left"></i> Back to Donors</a>
+
+<div class="card" style="max-width:780px">
+  <div class="card-header d-flex align-items-center gap-2">
+    <span class="d-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary" style="width:32px;height:32px">
+      <i class="bi bi-person-plus-fill"></i>
+    </span>
+    {{ title }}
+  </div>
+  <div class="card-body p-4">
     <form method="post" novalidate>
       {% csrf_token %}
       <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label fw-semibold">First Name</label>
+          <label class="form-label">First Name</label>
           {{ form.first_name }}
-          {% if form.first_name.errors %}<div class="text-danger small">{{ form.first_name.errors }}</div>{% endif %}
+          {% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Last Name</label>
+          <label class="form-label">Last Name</label>
           {{ form.last_name }}
-          {% if form.last_name.errors %}<div class="text-danger small">{{ form.last_name.errors }}</div>{% endif %}
+          {% if form.last_name.errors %}<div class="text-danger small mt-1">{{ form.last_name.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Date of Birth</label>
+          <label class="form-label">Date of Birth</label>
           {{ form.date_of_birth }}
-          {% if form.date_of_birth.errors %}<div class="text-danger small">{{ form.date_of_birth.errors }}</div>{% endif %}
+          {% if form.date_of_birth.errors %}<div class="text-danger small mt-1">{{ form.date_of_birth.errors }}</div>{% endif %}
         </div>
         <div class="col-md-3">
-          <label class="form-label fw-semibold">Blood Type</label>
+          <label class="form-label">Blood Type</label>
           {{ form.blood_type }}
-          {% if form.blood_type.errors %}<div class="text-danger small">{{ form.blood_type.errors }}</div>{% endif %}
+          {% if form.blood_type.errors %}<div class="text-danger small mt-1">{{ form.blood_type.errors }}</div>{% endif %}
         </div>
         <div class="col-md-3">
-          <label class="form-label fw-semibold">Status</label>
+          <label class="form-label">Status</label>
           {{ form.status }}
-          {% if form.status.errors %}<div class="text-danger small">{{ form.status.errors }}</div>{% endif %}
+          {% if form.status.errors %}<div class="text-danger small mt-1">{{ form.status.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Email</label>
+          <label class="form-label">Email</label>
           {{ form.email }}
-          {% if form.email.errors %}<div class="text-danger small">{{ form.email.errors }}</div>{% endif %}
+          {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors }}</div>{% endif %}
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold">Phone</label>
+          <label class="form-label">Phone</label>
           {{ form.phone }}
-          {% if form.phone.errors %}<div class="text-danger small">{{ form.phone.errors }}</div>{% endif %}
+          {% if form.phone.errors %}<div class="text-danger small mt-1">{{ form.phone.errors }}</div>{% endif %}
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold">Address</label>
+          <label class="form-label">Address</label>
           {{ form.address }}
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold">Organs Willing to Donate</label>
-          <div class="row">
+          <label class="form-label">Organs Willing to Donate</label>
+          <div class="row g-2 mt-1">
             {% for checkbox in form.organs %}
             <div class="col-sm-4 col-md-3">
-              <div class="form-check">
+              <div class="form-check p-2 border rounded" style="border-color:#e2e8f0 !important">
                 {{ checkbox.tag }}
-                <label class="form-check-label" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
+                <label class="form-check-label ms-1" for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
               </div>
             </div>
             {% endfor %}
           </div>
-          {% if form.organs.errors %}<div class="text-danger small">{{ form.organs.errors }}</div>{% endif %}
+          {% if form.organs.errors %}<div class="text-danger small mt-1">{{ form.organs.errors }}</div>{% endif %}
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold">Medical Notes <span class="text-muted fw-normal">(optional)</span></label>
+          <label class="form-label">Medical Notes <span class="text-muted fw-normal">(optional)</span></label>
           {{ form.medical_notes }}
         </div>
       </div>
       <div class="mt-4 d-flex gap-2">
-        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Save</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Save Donor</button>
         <a href="{% url 'donor_list' %}" class="btn btn-outline-secondary">Cancel</a>
       </div>
     </form>

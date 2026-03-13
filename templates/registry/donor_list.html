@@ -3,13 +3,13 @@
 {% block page_title %}Donor Registry{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h5 class="mb-0">All Donors</h5>
-  <a href="{% url 'donor_create' %}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Register Donor</a>
+<div class="page-header">
+  <h5><i class="bi bi-people-fill me-2 text-primary"></i>All Donors</h5>
+  <a href="{% url 'donor_create' %}" class="btn btn-primary"><i class="bi bi-person-plus-fill me-1"></i>Register Donor</a>
 </div>
 
 <!-- Filters -->
-<div class="card shadow-sm mb-3">
+<div class="card mb-3">
   <div class="card-body py-2">
     <form method="get" class="row g-2 align-items-end">
       <div class="col-md-4">
@@ -30,17 +30,17 @@
         </select>
       </div>
       <div class="col-auto">
-        <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-search"></i> Filter</button>
+        <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-search me-1"></i>Filter</button>
         <a href="{% url 'donor_list' %}" class="btn btn-sm btn-outline-secondary ms-1">Reset</a>
       </div>
     </form>
   </div>
 </div>
 
-<div class="card shadow-sm">
+<div class="card">
   <div class="table-responsive">
     <table class="table table-hover align-middle mb-0">
-      <thead class="table-light">
+      <thead>
         <tr>
           <th>#</th><th>Name</th><th>Blood Type</th><th>Organs</th><th>Phone</th><th>Status</th><th>Registered</th><th>Actions</th>
         </tr>
@@ -48,25 +48,25 @@
       <tbody>
         {% for donor in donors %}
         <tr>
-          <td class="text-muted small">{{ donor.pk }}</td>
+          <td class="text-muted">{{ donor.pk }}</td>
           <td>
             <a href="{% url 'donor_detail' donor.pk %}" class="fw-semibold text-decoration-none">{{ donor.full_name }}</a>
-            <div class="text-muted small">{{ donor.email }}</div>
+            <div class="text-muted" style="font-size:.78rem">{{ donor.email }}</div>
           </td>
-          <td><span class="badge bg-primary fs-6">{{ donor.blood_type }}</span></td>
+          <td><span class="badge bg-primary">{{ donor.blood_type }}</span></td>
           <td>
             {% for organ in donor.organs %}
-              <span class="badge bg-light text-dark border me-1">{{ organ }}</span>
+              <span class="badge bg-light text-dark border me-1 mb-1">{{ organ }}</span>
             {% empty %}<span class="text-muted">—</span>
             {% endfor %}
           </td>
           <td>{{ donor.phone }}</td>
           <td><span class="badge bg-{% if donor.status == 'Active' %}success{% elif donor.status == 'Matched' %}warning text-dark{% else %}secondary{% endif %}">{{ donor.status }}</span></td>
-          <td class="text-muted small">{{ donor.registered_at|date:"M d, Y" }}</td>
+          <td class="text-muted">{{ donor.registered_at|date:"M d, Y" }}</td>
           <td>
-            <a href="{% url 'donor_detail' donor.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
-            <a href="{% url 'donor_edit' donor.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-            <a href="{% url 'donor_delete' donor.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+            <a href="{% url 'donor_detail' donor.pk %}" class="btn btn-sm btn-outline-secondary" title="View"><i class="bi bi-eye"></i></a>
+            <a href="{% url 'donor_edit' donor.pk %}" class="btn btn-sm btn-outline-primary ms-1" title="Edit"><i class="bi bi-pencil"></i></a>
+            <a href="{% url 'donor_delete' donor.pk %}" class="btn btn-sm btn-outline-danger ms-1" title="Delete"><i class="bi bi-trash"></i></a>
           </td>
         </tr>
         {% empty %}
@@ -75,6 +75,6 @@
       </tbody>
     </table>
   </div>
-  <div class="card-footer text-muted small">{{ donors|length }} record(s)</div>
+  <div class="card-footer">{{ donors|length }} record(s)</div>
 </div>
 {% endblock %}
