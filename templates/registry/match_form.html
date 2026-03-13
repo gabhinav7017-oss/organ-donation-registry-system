@@ -1,0 +1,46 @@
+{% extends "registry/base.html" %}
+{% block title %}{{ title }} — Organ Donation Registry{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'match_list' %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Matches</a>
+</div>
+<div class="card shadow-sm" style="max-width:600px">
+  <div class="card-header fw-semibold"><i class="bi bi-diagram-3 me-2 text-danger"></i>{{ title }}</div>
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label fw-semibold">Donor</label>
+          {{ form.donor }}
+          {% if form.donor.errors %}<div class="text-danger small">{{ form.donor.errors }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Recipient</label>
+          {{ form.recipient }}
+          {% if form.recipient.errors %}<div class="text-danger small">{{ form.recipient.errors }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Organ</label>
+          {{ form.organ }}
+          {% if form.organ.errors %}<div class="text-danger small">{{ form.organ.errors }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Status</label>
+          {{ form.status }}
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Notes <span class="text-muted fw-normal">(optional)</span></label>
+          {{ form.notes }}
+        </div>
+      </div>
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-danger"><i class="bi bi-check-circle me-1"></i>Save Match</button>
+        <a href="{% url 'match_list' %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

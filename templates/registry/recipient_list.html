@@ -1,0 +1,82 @@
+{% extends "registry/base.html" %}
+{% block title %}Recipients — Organ Donation Registry{% endblock %}
+{% block page_title %}Recipient Registry{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h5 class="mb-0">All Recipients</h5>
+  <a href="{% url 'recipient_create' %}" class="btn btn-success"><i class="bi bi-person-add me-1"></i>Register Recipient</a>
+</div>
+
+<!-- Filters -->
+<div class="card shadow-sm mb-3">
+  <div class="card-body py-2">
+    <form method="get" class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <input type="text" name="q" value="{{ query }}" class="form-control form-control-sm" placeholder="Search name or email…">
+      </div>
+      <div class="col-md-2">
+        <select name="blood_type" class="form-select form-select-sm">
+          <option value="">All Blood Types</option>
+          {% for v, l in blood_type_choices %}<option value="{{ v }}" {% if blood_type == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="organ" class="form-select form-select-sm">
+          <option value="">All Organs</option>
+          {% for v, l in organ_choices %}<option value="{{ v }}" {% if organ == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <select name="urgency" class="form-select form-select-sm">
+          <option value="">All Urgency</option>
+          <option value="Critical" {% if urgency == 'Critical' %}selected{% endif %}>Critical</option>
+          <option value="High" {% if urgency == 'High' %}selected{% endif %}>High</option>
+          <option value="Medium" {% if urgency == 'Medium' %}selected{% endif %}>Medium</option>
+          <option value="Low" {% if urgency == 'Low' %}selected{% endif %}>Low</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-search"></i> Filter</button>
+        <a href="{% url 'recipient_list' %}" class="btn btn-sm btn-outline-secondary ms-1">Reset</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>#</th><th>Name</th><th>Blood Type</th><th>Organ Needed</th><th>Urgency</th><th>Status</th><th>Registered</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for r in recipients %}
+        <tr>
+          <td class="text-muted small">{{ r.pk }}</td>
+          <td>
+            <a href="{% url 'recipient_detail' r.pk %}" class="fw-semibold text-decoration-none">{{ r.full_name }}</a>
+            <div class="text-muted small">{{ r.email }}</div>
+          </td>
+          <td><span class="badge bg-success fs-6">{{ r.blood_type }}</span></td>
+          <td>
+            <span class="badge bg-danger px-2 py-1">{{ r.organ_needed }}</span>
+          </td>
+          <td><span class="badge badge-urgency-{{ r.urgency }}">{{ r.urgency }}</span></td>
+          <td><span class="badge bg-{% if r.status == 'Active' %}success{% elif r.status == 'Matched' %}warning text-dark{% else %}secondary{% endif %}">{{ r.status }}</span></td>
+          <td class="text-muted small">{{ r.registered_at|date:"M d, Y" }}</td>
+          <td>
+            <a href="{% url 'recipient_detail' r.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+            <a href="{% url 'recipient_edit' r.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+            <a href="{% url 'recipient_delete' r.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No recipients found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer text-muted small">{{ recipients|length }} record(s)</div>
+</div>
+{% endblock %}
