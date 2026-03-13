@@ -28,6 +28,53 @@ def dashboard(request):
         'Low': Recipient.objects.filter(urgency='Low', status='Active').count(),
     }
 
+    donor_blood_counts = list(
+        Donor.objects.values('blood_type')
+        .annotate(total=Count('id'))
+        .order_by('blood_type')
+    )
+
+    organ_available_counts = list(
+        Donor.objects.filter(status='Active')
+        .values('organs')
+    )
+    organ_totals = {label: 0 for _, label in ORGAN_CHOICES}
+    for donor_organs in organ_available_counts:
+        for organ in donor_organs.get('organs', []):
+            if organ in organ_totals:
+                organ_totals[organ] += 1
+
+    recipient_organ_counts = {
+        item['organ_needed']: item['total']
+        for item in Recipient.objects.filter(status='Active')
+        .values('organ_needed')
+        .annotate(total=Count('id'))
+    }
+
+    organ_status_map = {}
+    for organ_name, donor_count in organ_totals.items():
+        recipient_count = recipient_organ_counts.get(organ_name, 0)
+        if donor_count > 0 and recipient_count > 0:
+            state = 'both'
+        elif donor_count > 0:
+            state = 'donor'
+        elif recipient_count > 0:
+            state = 'recipient'
+        else:
+            state = 'none'
+        organ_status_map[organ_name] = {
+            'donors': donor_count,
+            'recipients': recipient_count,
+            'state': state,
+        }
+
+    recipient_urgency_counts = list(
+        Recipient.objects.filter(status='Active')
+        .values('urgency')
+        .annotate(total=Count('id'))
+        .order_by('urgency')
+    )
+
     context = {
         'total_donors': total_donors,
         'active_donors': active_donors,
@@ -40,6 +87,11 @@ def dashboard(request):
         'recent_recipients': recent_recipients,
         'recent_matches': recent_matches,
         'urgency_stats': urgency_stats,
+        'donor_blood_labels': [item['blood_type'] for item in donor_blood_counts],
+        'donor_blood_values': [item['total'] for item in donor_blood_counts],
+        'recipient_urgency_labels': [item['urgency'] for item in recipient_urgency_counts],
+        'recipient_urgency_values': [item['total'] for item in recipient_urgency_counts],
+        'organ_status_map': organ_status_map,
     }
     return render(request, 'registry/dashboard.html', context)
 

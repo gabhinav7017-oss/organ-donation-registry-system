@@ -3,10 +3,35 @@
 {% block page_title %}Hospital Dashboard{% endblock %}
 
 {% block content %}
+<div class="card border-0 mb-4" data-aos="fade-down" style="background: linear-gradient(135deg, #2563EB, #10B981 55%, #EF4444); color: #fff;">
+  <div class="card-body p-4">
+    <div class="row align-items-center">
+      <div class="col-lg-9">
+        <h4 class="fw-bold mb-1">Organ Donation Registry Dashboard</h4>
+        <p class="mb-0 opacity-75">Monitor donors, recipients, and life-saving match activity in one place.</p>
+      </div>
+      <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+        <a href="{% url 'auto_match' %}" class="btn btn-light text-danger fw-semibold">
+          <i class="bi bi-magic me-1"></i>Run Auto-Match
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4" data-aos="fade-up">
+  <div class="card-header fw-semibold">
+    <i class="bi bi-badge-3d me-2 text-primary"></i>3D Visual
+  </div>
+  <div class="card-body p-2">
+    <canvas id="scene" style="width: 100%; height: 400px; display: block;"></canvas>
+  </div>
+</div>
+
 <!-- Stat Cards -->
 <div class="row g-3 mb-4">
   <div class="col-sm-6 col-xl-3">
-    <div class="card stat-card donors shadow-sm">
+    <div class="card stat-card donors shadow-sm" data-aos="fade-up" data-aos-delay="20">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
           <div class="text-muted small">Total Donors</div>
@@ -18,7 +43,7 @@
     </div>
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="card stat-card recipients shadow-sm">
+    <div class="card stat-card recipients shadow-sm" data-aos="fade-up" data-aos-delay="70">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
           <div class="text-muted small">Total Recipients</div>
@@ -30,7 +55,7 @@
     </div>
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="card stat-card matches shadow-sm">
+    <div class="card stat-card matches shadow-sm" data-aos="fade-up" data-aos-delay="120">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
           <div class="text-muted small">Total Matches</div>
@@ -42,14 +67,14 @@
     </div>
   </div>
   <div class="col-sm-6 col-xl-3">
-    <div class="card stat-card pending shadow-sm">
+    <div class="card stat-card pending shadow-sm" data-aos="fade-up" data-aos-delay="170">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
           <div class="text-muted small">Pending Matches</div>
-          <div class="fs-2 fw-bold text-warning">{{ pending_matches }}</div>
+          <div class="fs-2 fw-bold text-primary">{{ pending_matches }}</div>
           <div class="small text-muted">awaiting approval</div>
         </div>
-        <i class="bi bi-hourglass-split fs-1 text-warning opacity-25"></i>
+        <i class="bi bi-hourglass-split fs-1 text-primary opacity-25"></i>
       </div>
     </div>
   </div>
@@ -58,7 +83,7 @@
 <!-- Urgency & Quick Actions -->
 <div class="row g-3 mb-4">
   <div class="col-md-5">
-    <div class="card shadow-sm h-100">
+    <div class="card shadow-sm h-100" data-aos="fade-right">
       <div class="card-header fw-semibold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Active Recipients by Urgency</div>
       <div class="card-body">
         {% for level, count in urgency_stats.items %}
@@ -77,8 +102,8 @@
     </div>
   </div>
   <div class="col-md-7">
-    <div class="card shadow-sm h-100">
-      <div class="card-header fw-semibold"><i class="bi bi-lightning-charge-fill text-warning me-2"></i>Quick Actions</div>
+    <div class="card shadow-sm h-100" data-aos="fade-left">
+      <div class="card-header fw-semibold"><i class="bi bi-lightning-charge-fill text-primary me-2"></i>Quick Actions</div>
       <div class="card-body d-flex flex-wrap gap-2 align-items-start">
         <a href="{% url 'donor_create' %}" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Register Donor</a>
         <a href="{% url 'recipient_create' %}" class="btn btn-success"><i class="bi bi-person-add me-1"></i>Register Recipient</a>
@@ -89,10 +114,37 @@
   </div>
 </div>
 
+<div class="row g-3 mb-4">
+  <div class="col-lg-4">
+    <div class="card chart-card h-100" data-aos="zoom-in">
+      <div class="card-header fw-semibold"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Donors by Blood Group</div>
+      <div class="card-body">
+        <canvas id="donorBloodChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card chart-card h-100" data-aos="zoom-in" data-aos-delay="80">
+      <div class="card-header fw-semibold"><i class="bi bi-heart-pulse-fill me-2 text-danger"></i>Available Organs</div>
+      <div class="card-body">
+        <canvas id="organAvailableChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card chart-card h-100" data-aos="zoom-in" data-aos-delay="150">
+      <div class="card-header fw-semibold"><i class="bi bi-bar-chart-fill me-2 text-success"></i>Recipients by Urgency</div>
+      <div class="card-body">
+        <canvas id="urgencyChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Recent Tables -->
 <div class="row g-3">
   <div class="col-lg-6">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm" data-aos="fade-up">
       <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
         <span><i class="bi bi-people me-2 text-primary"></i>Recent Donors</span>
         <a href="{% url 'donor_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
@@ -115,7 +167,7 @@
     </div>
   </div>
   <div class="col-lg-6">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm" data-aos="fade-up" data-aos-delay="80">
       <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
         <span><i class="bi bi-person-heart me-2 text-success"></i>Recent Recipients</span>
         <a href="{% url 'recipient_list' %}" class="btn btn-sm btn-outline-success">View All</a>
@@ -138,7 +190,7 @@
     </div>
   </div>
   <div class="col-12">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm" data-aos="fade-up" data-aos-delay="140">
       <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
         <span><i class="bi bi-diagram-3 me-2 text-danger"></i>Recent Matches</span>
         <a href="{% url 'match_list' %}" class="btn btn-sm btn-outline-danger">View All</a>
@@ -163,4 +215,111 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+{{ donor_blood_labels|json_script:"donor-blood-labels" }}
+{{ donor_blood_values|json_script:"donor-blood-values" }}
+{{ organ_labels|json_script:"organ-labels" }}
+{{ organ_values|json_script:"organ-values" }}
+{{ recipient_urgency_labels|json_script:"urgency-labels" }}
+{{ recipient_urgency_values|json_script:"urgency-values" }}
+<script>
+  AOS.init({ duration: 550, once: true, easing: 'ease-out-cubic' });
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 400, 0.1, 1000);
+
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio || 1);
+  renderer.setSize(window.innerWidth, 400);
+
+  const geometry = new THREE.SphereGeometry(2, 32, 32);
+  const material = new THREE.MeshBasicMaterial({ color: 0x2563eb, wireframe: true });
+
+  const sphere = new THREE.Mesh(geometry, material);
+  scene.add(sphere);
+
+  camera.position.z = 5;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    sphere.rotation.y += 0.01;
+    renderer.render(scene, camera);
+  }
+
+  function resizeScene() {
+    const canvas = document.getElementById('scene');
+    const width = canvas.clientWidth || window.innerWidth;
+    const height = 400;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+  }
+
+  window.addEventListener('resize', resizeScene);
+  resizeScene();
+  animate();
+
+  const donorLabels = JSON.parse(document.getElementById('donor-blood-labels').textContent || '[]');
+  const donorValues = JSON.parse(document.getElementById('donor-blood-values').textContent || '[]');
+  const organLabels = JSON.parse(document.getElementById('organ-labels').textContent || '[]');
+  const organValues = JSON.parse(document.getElementById('organ-values').textContent || '[]');
+  const urgencyLabels = JSON.parse(document.getElementById('urgency-labels').textContent || '[]');
+  const urgencyValues = JSON.parse(document.getElementById('urgency-values').textContent || '[]');
+
+  new Chart(document.getElementById('donorBloodChart'), {
+    type: 'doughnut',
+    data: {
+      labels: donorLabels,
+      datasets: [{
+        data: donorValues,
+        backgroundColor: ['#2563EB', '#10B981', '#EF4444', '#2563EB', '#10B981', '#EF4444', '#2563EB', '#10B981'],
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom' } },
+      cutout: '62%'
+    }
+  });
+
+  new Chart(document.getElementById('organAvailableChart'), {
+    type: 'bar',
+    data: {
+      labels: organLabels,
+      datasets: [{
+        label: 'Active Donors',
+        data: organValues,
+        backgroundColor: '#EF4444',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('urgencyChart'), {
+    type: 'polarArea',
+    data: {
+      labels: urgencyLabels,
+      datasets: [{
+        data: urgencyValues,
+        backgroundColor: ['#EF4444', '#2563EB', '#10B981', '#2563EB']
+      }]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+</script>
 {% endblock %}
