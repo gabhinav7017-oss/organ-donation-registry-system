@@ -21,10 +21,134 @@
 
 <div class="card mb-4" data-aos="fade-up">
   <div class="card-header fw-semibold">
-    <i class="bi bi-badge-3d me-2 text-primary"></i>3D Visual
+    <i class="bi bi-heart-pulse-fill me-2 text-danger"></i>Interactive Organ Map
   </div>
-  <div class="card-body p-2">
-    <canvas id="scene" style="width: 100%; height: 400px; display: block;"></canvas>
+  <div class="card-body p-3">
+    <div class="row align-items-start">
+      <!-- Human Body SVG -->
+      <div class="col-lg-7 text-center" id="human-body-container">
+        <svg id="human-body-svg" viewBox="0 0 400 700" style="max-height:520px;width:100%;max-width:380px;" aria-label="Interactive human body organ map">
+          <!-- Body silhouette -->
+          <defs>
+            <radialGradient id="organGlow-both" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0.7"/>
+              <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0"/>
+            </radialGradient>
+            <radialGradient id="organGlow-donor" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.7"/>
+              <stop offset="100%" style="stop-color:#10B981;stop-opacity:0"/>
+            </radialGradient>
+            <radialGradient id="organGlow-recipient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color:#EF4444;stop-opacity:0.7"/>
+              <stop offset="100%" style="stop-color:#EF4444;stop-opacity:0"/>
+            </radialGradient>
+          </defs>
+          <!-- Body outline -->
+          <path d="M200,30 C220,30 235,45 235,65 C235,85 220,105 200,105 C180,105 165,85 165,65 C165,45 180,30 200,30 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+          <path d="M200,105 L200,115 C200,115 230,120 260,145 L300,185 L320,225 L305,230 L265,195 L240,175 L230,180 L230,320 L260,450 L260,560 L255,620 L245,620 L220,460 L200,380 L180,460 L155,620 L145,620 L140,560 L140,450 L170,320 L170,180 L160,175 L135,195 L95,230 L80,225 L100,185 L140,145 C170,120 200,115 200,115 Z" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+
+          <!-- Organ regions (interactive) -->
+          <!-- Corneas (eyes) -->
+          <g class="organ-region" data-organ="Corneas" role="button" tabindex="0" aria-label="Corneas">
+            <circle class="organ-glow" cx="188" cy="60" r="18" fill="none" opacity="0"/>
+            <circle class="organ-shape" cx="188" cy="60" r="7" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+            <circle class="organ-shape" cx="212" cy="60" r="7" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+          </g>
+
+          <!-- Heart -->
+          <g class="organ-region" data-organ="Heart" role="button" tabindex="0" aria-label="Heart">
+            <circle class="organ-glow" cx="210" cy="175" r="26" fill="none" opacity="0"/>
+            <path class="organ-shape" d="M210,165 C210,158 218,153 223,158 C228,163 228,170 210,185 C192,170 192,163 197,158 C202,153 210,158 210,165 Z" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+          </g>
+
+          <!-- Lungs -->
+          <g class="organ-region" data-organ="Lungs" role="button" tabindex="0" aria-label="Lungs">
+            <circle class="organ-glow" cx="200" cy="185" r="42" fill="none" opacity="0"/>
+            <ellipse class="organ-shape" cx="175" cy="185" rx="18" ry="32" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+            <ellipse class="organ-shape" cx="230" cy="185" rx="18" ry="32" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+          </g>
+
+          <!-- Liver -->
+          <g class="organ-region" data-organ="Liver" role="button" tabindex="0" aria-label="Liver">
+            <circle class="organ-glow" cx="220" cy="235" r="26" fill="none" opacity="0"/>
+            <path class="organ-shape" d="M205,222 C215,218 240,220 240,232 C240,244 225,250 210,248 C198,246 195,235 205,222 Z" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+          </g>
+
+          <!-- Pancreas -->
+          <g class="organ-region" data-organ="Pancreas" role="button" tabindex="0" aria-label="Pancreas">
+            <circle class="organ-glow" cx="195" cy="258" r="22" fill="none" opacity="0"/>
+            <path class="organ-shape" d="M175,255 C180,248 220,248 225,255 C228,260 220,265 210,264 C200,263 195,266 185,265 C175,264 172,260 175,255 Z" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+          </g>
+
+          <!-- Kidneys -->
+          <g class="organ-region" data-organ="Kidney" role="button" tabindex="0" aria-label="Kidney">
+            <circle class="organ-glow" cx="200" cy="275" r="32" fill="none" opacity="0"/>
+            <ellipse class="organ-shape" cx="175" cy="272" rx="10" ry="15" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85" transform="rotate(-10,175,272)"/>
+            <ellipse class="organ-shape" cx="225" cy="272" rx="10" ry="15" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85" transform="rotate(10,225,272)"/>
+          </g>
+
+          <!-- Intestine -->
+          <g class="organ-region" data-organ="Intestine" role="button" tabindex="0" aria-label="Intestine">
+            <circle class="organ-glow" cx="200" cy="310" r="28" fill="none" opacity="0"/>
+            <path class="organ-shape" d="M182,295 C188,290 212,290 218,295 C224,300 224,310 218,315 C212,320 206,310 200,315 C194,320 188,310 182,315 C176,310 176,300 182,295 Z" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85"/>
+          </g>
+
+          <!-- Bone Marrow (femur areas) -->
+          <g class="organ-region" data-organ="Bone Marrow" role="button" tabindex="0" aria-label="Bone Marrow">
+            <circle class="organ-glow" cx="200" cy="470" r="40" fill="none" opacity="0"/>
+            <rect class="organ-shape" x="152" y="440" width="10" height="55" rx="5" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85" transform="rotate(5,157,467)"/>
+            <rect class="organ-shape" x="238" y="440" width="10" height="55" rx="5" fill="#94a3b8" stroke="#64748b" stroke-width="1.2" opacity="0.85" transform="rotate(-5,243,467)"/>
+          </g>
+
+          <!-- Skin (represented as an outline around body) -->
+          <g class="organ-region" data-organ="Skin" role="button" tabindex="0" aria-label="Skin">
+            <circle class="organ-glow" cx="200" cy="350" r="65" fill="none" opacity="0"/>
+            <path class="organ-shape" d="M170,135 C170,135 175,130 200,130 C225,130 230,135 230,135" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+            <path class="organ-shape" d="M168,345 C168,345 175,350 200,350 C225,350 232,345 232,345" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+          </g>
+
+          <!-- Organ labels (positioned near each organ) -->
+          <text x="200" y="42" text-anchor="middle" class="organ-label" data-organ="Corneas" font-size="9" fill="#475467" font-weight="600">Corneas</text>
+          <text x="210" y="200" text-anchor="middle" class="organ-label" data-organ="Heart" font-size="9" fill="#475467" font-weight="600">Heart</text>
+          <text x="144" y="190" text-anchor="middle" class="organ-label" data-organ="Lungs" font-size="9" fill="#475467" font-weight="600">Lungs</text>
+          <text x="253" y="240" text-anchor="start" class="organ-label" data-organ="Liver" font-size="9" fill="#475467" font-weight="600">Liver</text>
+          <text x="145" y="258" text-anchor="end" class="organ-label" data-organ="Pancreas" font-size="9" fill="#475467" font-weight="600">Pancreas</text>
+          <text x="145" y="275" text-anchor="end" class="organ-label" data-organ="Kidney" font-size="9" fill="#475467" font-weight="600">Kidneys</text>
+          <text x="200" y="340" text-anchor="middle" class="organ-label" data-organ="Intestine" font-size="9" fill="#475467" font-weight="600">Intestine</text>
+          <text x="265" y="470" text-anchor="start" class="organ-label" data-organ="Bone Marrow" font-size="9" fill="#475467" font-weight="600">Bone Marrow</text>
+          <text x="200" y="365" text-anchor="middle" class="organ-label" data-organ="Skin" font-size="9" fill="#475467" font-weight="600">Skin</text>
+        </svg>
+      </div>
+
+      <!-- Legend & Organ Detail Panel -->
+      <div class="col-lg-5">
+        <div class="mb-3">
+          <h6 class="fw-bold text-muted mb-2"><i class="bi bi-info-circle me-1"></i>Legend</h6>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge" style="background:#a855f7;color:#fff;"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Donors &amp; Recipients</span>
+            <span class="badge" style="background:#10B981;color:#fff;"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Donors Only</span>
+            <span class="badge" style="background:#EF4444;color:#fff;"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Recipients Only</span>
+            <span class="badge" style="background:#94a3b8;color:#fff;"><i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>No Activity</span>
+          </div>
+        </div>
+        <div id="organ-detail-panel">
+          <p class="text-muted small"><i class="bi bi-hand-index me-1"></i>Hover over an organ on the body to see details.</p>
+        </div>
+        <div id="organ-status-list" class="mt-2">
+          {% for organ_name, info in organ_status_map.items %}
+          <div class="d-flex align-items-center justify-content-between py-2 px-2 mb-1 rounded organ-status-row"
+               data-organ="{{ organ_name }}"
+               style="border-left:4px solid {% if info.state == 'both' %}#a855f7{% elif info.state == 'donor' %}#10B981{% elif info.state == 'recipient' %}#EF4444{% else %}#cbd5e1{% endif %}; background:#f8fafc; cursor:pointer;">
+            <span class="fw-semibold small">{{ organ_name }}</span>
+            <span class="small">
+              <span class="text-success me-2" title="Donors"><i class="bi bi-person-fill"></i> {{ info.donors }}</span>
+              <span class="text-danger" title="Recipients"><i class="bi bi-person-heart"></i> {{ info.recipients }}</span>
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -223,103 +347,203 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 {{ donor_blood_labels|json_script:"donor-blood-labels" }}
 {{ donor_blood_values|json_script:"donor-blood-values" }}
-{{ organ_labels|json_script:"organ-labels" }}
-{{ organ_values|json_script:"organ-values" }}
+{{ organ_status_map|json_script:"organ-status-map" }}
 {{ recipient_urgency_labels|json_script:"urgency-labels" }}
 {{ recipient_urgency_values|json_script:"urgency-values" }}
+<style>
+  .organ-region { cursor: pointer; transition: transform 0.2s ease; }
+  .organ-region:hover .organ-shape,
+  .organ-region:focus .organ-shape { filter: brightness(1.2); transform-origin: center; }
+  .organ-region:hover, .organ-region:focus { outline: none; }
+  .organ-region .organ-shape { transition: fill 0.3s ease, opacity 0.3s ease, filter 0.2s ease; }
+  .organ-region .organ-glow { transition: fill 0.3s ease, opacity 0.3s ease; pointer-events: none; }
+  .organ-label { pointer-events: none; }
+  .organ-status-row { transition: background 0.15s ease, transform 0.15s ease; }
+  .organ-status-row:hover, .organ-status-row.active { background: #eef2ff !important; transform: translateX(2px); }
+
+  @keyframes organPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+  }
+  .organ-glow.active { animation: organPulse 2s ease-in-out infinite; }
+</style>
 <script>
-  AOS.init({ duration: 550, once: true, easing: 'ease-out-cubic' });
+  try { AOS.init({ duration: 550, once: true, easing: 'ease-out-cubic' }); } catch(e) { console.warn('AOS initialization skipped:', e.message); }
 
-  const scene = new THREE.Scene();
+  /* ── Interactive Organ Map ── */
+  const organStatusMap = JSON.parse(document.getElementById('organ-status-map').textContent || '{}');
+  const stateColors = {
+    both: '#a855f7',
+    donor: '#10B981',
+    recipient: '#EF4444',
+    none: '#94a3b8'
+  };
+  const stateLabels = {
+    both: 'Donors & Recipients available',
+    donor: 'Donors available',
+    recipient: 'Recipients waiting',
+    none: 'No active donors or recipients'
+  };
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 400, 0.1, 1000);
-
-  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio || 1);
-  renderer.setSize(window.innerWidth, 400);
-
-  const geometry = new THREE.SphereGeometry(2, 32, 32);
-  const material = new THREE.MeshBasicMaterial({ color: 0x2563eb, wireframe: true });
-
-  const sphere = new THREE.Mesh(geometry, material);
-  scene.add(sphere);
-
-  camera.position.z = 5;
-
-  function animate() {
-    requestAnimationFrame(animate);
-    sphere.rotation.y += 0.01;
-    renderer.render(scene, camera);
-  }
-
-  function resizeScene() {
-    const canvas = document.getElementById('scene');
-    const width = canvas.clientWidth || window.innerWidth;
-    const height = 400;
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height, false);
-  }
-
-  window.addEventListener('resize', resizeScene);
-  resizeScene();
-  animate();
-
-  const donorLabels = JSON.parse(document.getElementById('donor-blood-labels').textContent || '[]');
-  const donorValues = JSON.parse(document.getElementById('donor-blood-values').textContent || '[]');
-  const organLabels = JSON.parse(document.getElementById('organ-labels').textContent || '[]');
-  const organValues = JSON.parse(document.getElementById('organ-values').textContent || '[]');
-  const urgencyLabels = JSON.parse(document.getElementById('urgency-labels').textContent || '[]');
-  const urgencyValues = JSON.parse(document.getElementById('urgency-values').textContent || '[]');
-
-  new Chart(document.getElementById('donorBloodChart'), {
-    type: 'doughnut',
-    data: {
-      labels: donorLabels,
-      datasets: [{
-        data: donorValues,
-        backgroundColor: ['#2563EB', '#10B981', '#EF4444', '#2563EB', '#10B981', '#EF4444', '#2563EB', '#10B981'],
-        borderWidth: 2,
-        borderColor: '#fff'
-      }]
-    },
-    options: {
-      plugins: { legend: { position: 'bottom' } },
-      cutout: '62%'
-    }
-  });
-
-  new Chart(document.getElementById('organAvailableChart'), {
-    type: 'bar',
-    data: {
-      labels: organLabels,
-      datasets: [{
-        label: 'Active Donors',
-        data: organValues,
-        backgroundColor: '#EF4444',
-        borderRadius: 8
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, ticks: { precision: 0 } }
+  function colorizeOrgans() {
+    document.querySelectorAll('.organ-region').forEach(function(g) {
+      var organName = g.getAttribute('data-organ');
+      var info = organStatusMap[organName];
+      if (!info) return;
+      var color = stateColors[info.state] || stateColors.none;
+      g.querySelectorAll('.organ-shape').forEach(function(shape) {
+        if (shape.tagName === 'path' && shape.getAttribute('fill') === 'none') {
+          shape.setAttribute('stroke', color);
+        } else {
+          shape.setAttribute('fill', color);
+        }
+        shape.setAttribute('opacity', info.state === 'none' ? '0.5' : '0.85');
+      });
+      var glow = g.querySelector('.organ-glow');
+      if (glow && info.state !== 'none') {
+        glow.setAttribute('fill', 'url(#organGlow-' + info.state + ')');
+        glow.setAttribute('opacity', '0.6');
+        glow.classList.add('active');
       }
-    }
+    });
+    document.querySelectorAll('.organ-label').forEach(function(label) {
+      var organName = label.getAttribute('data-organ');
+      var info = organStatusMap[organName];
+      if (info && info.state !== 'none') {
+        label.setAttribute('fill', stateColors[info.state]);
+        label.setAttribute('font-weight', '700');
+      }
+    });
+  }
+  colorizeOrgans();
+
+  var detailPanel = document.getElementById('organ-detail-panel');
+  var defaultDetailHTML = detailPanel.innerHTML;
+
+  function showOrganDetail(organName) {
+    var info = organStatusMap[organName];
+    if (!info) return;
+    var color = stateColors[info.state];
+    detailPanel.innerHTML =
+      '<div class="p-3 rounded" style="border:2px solid ' + color + '; background:' + color + '10;">' +
+        '<h6 class="fw-bold mb-2" style="color:' + color + ';">' +
+          '<i class="bi bi-heart-pulse me-1"></i>' + organName +
+        '</h6>' +
+        '<div class="d-flex gap-3 mb-2">' +
+          '<div class="text-center">' +
+            '<div class="fs-4 fw-bold text-success">' + info.donors + '</div>' +
+            '<div class="small text-muted">Donors</div>' +
+          '</div>' +
+          '<div class="text-center">' +
+            '<div class="fs-4 fw-bold text-danger">' + info.recipients + '</div>' +
+            '<div class="small text-muted">Recipients</div>' +
+          '</div>' +
+        '</div>' +
+        '<p class="small mb-0" style="color:' + color + ';">' +
+          '<i class="bi bi-circle-fill me-1" style="font-size:.45rem"></i>' +
+          stateLabels[info.state] +
+        '</p>' +
+      '</div>';
+  }
+
+  function clearOrganDetail() {
+    detailPanel.innerHTML = defaultDetailHTML;
+  }
+
+  document.querySelectorAll('.organ-region').forEach(function(g) {
+    g.addEventListener('mouseenter', function() { showOrganDetail(g.getAttribute('data-organ')); });
+    g.addEventListener('focus', function() { showOrganDetail(g.getAttribute('data-organ')); });
+    g.addEventListener('mouseleave', clearOrganDetail);
+    g.addEventListener('blur', clearOrganDetail);
   });
 
-  new Chart(document.getElementById('urgencyChart'), {
-    type: 'polarArea',
-    data: {
-      labels: urgencyLabels,
-      datasets: [{
-        data: urgencyValues,
-        backgroundColor: ['#EF4444', '#2563EB', '#10B981', '#2563EB']
-      }]
-    },
-    options: {
-      plugins: { legend: { position: 'bottom' } }
-    }
+  document.querySelectorAll('.organ-status-row').forEach(function(row) {
+    row.addEventListener('mouseenter', function() {
+      var organName = row.getAttribute('data-organ');
+      showOrganDetail(organName);
+      var g = document.querySelector('.organ-region[data-organ="' + organName + '"]');
+      if (g) {
+        g.querySelectorAll('.organ-shape').forEach(function(s) {
+          s.setAttribute('opacity', '1');
+          s.style.filter = 'brightness(1.3)';
+        });
+      }
+    });
+    row.addEventListener('mouseleave', function() {
+      clearOrganDetail();
+      colorizeOrgans();
+      document.querySelectorAll('.organ-shape').forEach(function(s) { s.style.filter = ''; });
+    });
   });
+
+  /* ── Charts ── */
+  if (typeof Chart !== 'undefined') {
+    const donorLabels = JSON.parse(document.getElementById('donor-blood-labels').textContent || '[]');
+    const donorValues = JSON.parse(document.getElementById('donor-blood-values').textContent || '[]');
+    const urgencyLabels = JSON.parse(document.getElementById('urgency-labels').textContent || '[]');
+    const urgencyValues = JSON.parse(document.getElementById('urgency-values').textContent || '[]');
+
+    const organChartLabels = Object.keys(organStatusMap);
+    const organChartDonors = organChartLabels.map(function(k) { return organStatusMap[k].donors; });
+    const organChartRecipients = organChartLabels.map(function(k) { return organStatusMap[k].recipients; });
+
+    new Chart(document.getElementById('donorBloodChart'), {
+      type: 'doughnut',
+      data: {
+        labels: donorLabels,
+        datasets: [{
+          data: donorValues,
+          backgroundColor: ['#2563EB', '#10B981', '#EF4444', '#2563EB', '#10B981', '#EF4444', '#2563EB', '#10B981'],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom' } },
+        cutout: '62%'
+      }
+    });
+
+    new Chart(document.getElementById('organAvailableChart'), {
+      type: 'bar',
+      data: {
+        labels: organChartLabels,
+        datasets: [
+          {
+            label: 'Active Donors',
+            data: organChartDonors,
+            backgroundColor: '#10B981',
+            borderRadius: 8
+          },
+          {
+            label: 'Waiting Recipients',
+            data: organChartRecipients,
+            backgroundColor: '#EF4444',
+            borderRadius: 8
+          }
+        ]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('urgencyChart'), {
+      type: 'polarArea',
+      data: {
+        labels: urgencyLabels,
+        datasets: [{
+          data: urgencyValues,
+          backgroundColor: ['#EF4444', '#2563EB', '#10B981', '#2563EB']
+        }]
+      },
+      options: {
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
+  }
 </script>
 {% endblock %}
