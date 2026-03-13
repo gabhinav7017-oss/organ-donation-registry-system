@@ -14,7 +14,7 @@
       --bg: #F8FAFC;
       --surface: #ffffff;
       --primary: #2563EB;
-      --secondary: #10B981;
+      --secondary: #14B8A6;
       --accent: #EF4444;
       --text: #1f2937;
       --muted: #667085;
@@ -24,8 +24,8 @@
 
       --bs-primary: #2563EB;
       --bs-primary-rgb: 37, 99, 235;
-      --bs-success: #10B981;
-      --bs-success-rgb: 16, 185, 129;
+      --bs-success: #14B8A6;
+      --bs-success-rgb: 20, 184, 166;
       --bs-danger: #EF4444;
       --bs-danger-rgb: 239, 68, 68;
       --bs-info: #2563EB;
@@ -36,19 +36,20 @@
       font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 0% 0%, rgba(239, 68, 68, 0.08), transparent 32%),
-        radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
+        radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.08), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(20, 184, 166, 0.08), transparent 36%),
         var(--bg);
     }
 
     .sidebar {
       min-height: 100vh;
-      background: linear-gradient(180deg, #2563EB 0%, #10B981 100%);
-      box-shadow: 8px 0 30px rgba(15, 23, 42, 0.2);
+      background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.86));
+      border-right: 1px solid #e2e8f0;
+      box-shadow: 8px 0 24px rgba(15, 23, 42, 0.06);
     }
 
     .sidebar .nav-link {
-      color: #d4deec;
+      color: #37516b;
       padding: .62rem 1rem;
       border-radius: 10px;
       margin: 3px 8px;
@@ -59,23 +60,23 @@
 
     .sidebar .nav-link:hover,
     .sidebar .nav-link.active {
-      background: rgba(239, 68, 68, 0.95);
-      color: #fff;
-      transform: translateX(3px);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--primary);
+      transform: translateX(2px);
+      border-color: rgba(37, 99, 235, 0.2);
     }
 
     .sidebar .brand {
-      color: #fff;
+      color: #1e3a5f;
       font-size: 1.1rem;
       font-weight: 800;
       padding: 1.15rem 1.2rem;
-      border-bottom: 1px solid rgba(127, 163, 196, 0.28);
+      border-bottom: 1px solid #e5edf6;
       letter-spacing: .2px;
     }
 
     .sidebar .nav-section {
-      color: #8db1d4;
+      color: #8aa1b9;
       font-size: .7rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -87,10 +88,34 @@
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--line);
-      padding: .9rem 2rem;
+      padding: .85rem 1.4rem;
       position: sticky;
       top: 0;
       z-index: 40;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .topbar-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #2563EB, #14B8A6);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, .24);
+    }
+
+    .topbar-subtitle {
+      color: #94a3b8;
+      font-size: .78rem;
+      line-height: 1.1;
     }
 
     .content-area {
@@ -103,6 +128,8 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       transition: transform .2s ease, box-shadow .2s ease;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(3px);
     }
 
     .card:hover {
@@ -136,6 +163,12 @@
     .btn {
       border-radius: 10px;
       font-weight: 600;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, .1);
     }
 
     .form-control,
@@ -163,13 +196,22 @@
 
     .stat-card { border-left: 4px solid; border-radius: var(--radius); }
     .stat-card.donors { border-color: #2563EB; }
-    .stat-card.recipients { border-color: #10B981; }
+    .stat-card.recipients { border-color: #14B8A6; }
     .stat-card.matches { border-color: #EF4444; }
-    .stat-card.pending { border-color: #2563EB; }
+    .stat-card.pending { border-color: #F59E0B; }
     .badge-urgency-Critical { background-color: #EF4444; }
     .badge-urgency-High { background-color: #2563EB; }
     .badge-urgency-Medium { background-color: rgba(37, 99, 235, 0.78); }
-    .badge-urgency-Low { background-color: #10B981; }
+    .badge-urgency-Low { background-color: #14B8A6; }
+
+    .stats-animate {
+      animation: fadeInUp .5s ease both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .panel-subtitle {
       color: var(--muted);
@@ -216,18 +258,18 @@
     <nav class="flex-grow-1 pt-2">
       <div class="nav-section">Main</div>
       <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        <i class="bi bi-hospital me-2"></i>Dashboard
       </a>
       <div class="nav-section">Donors</div>
       <a href="{% url 'donor_list' %}" class="nav-link {% if 'donor' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="bi bi-people me-2"></i>All Donors
+        <i class="bi bi-heart-pulse me-2"></i>All Donors
       </a>
       <a href="{% url 'donor_create' %}" class="nav-link">
-        <i class="bi bi-person-plus me-2"></i>Register Donor
+        <i class="bi bi-person-plus-fill me-2"></i>Register Donor
       </a>
       <div class="nav-section">Recipients</div>
       <a href="{% url 'recipient_list' %}" class="nav-link {% if 'recipient' in request.resolver_match.url_name %}active{% endif %}">
-        <i class="bi bi-person-wheelchair me-2"></i>All Recipients
+        <i class="bi bi-person-hearts me-2"></i>All Recipients
       </a>
       <a href="{% url 'recipient_create' %}" class="nav-link">
         <i class="bi bi-person-add me-2"></i>Register Recipient
@@ -243,7 +285,7 @@
         <i class="bi bi-plus-circle me-2"></i>Create Match
       </a>
     </nav>
-    <div class="p-3 border-top" style="border-color:rgba(37, 99, 235, 0.35) !important;">
+    <div class="p-3 border-top" style="border-color:#e5edf6 !important;">
       <a href="/admin/" class="nav-link" target="_blank"><i class="bi bi-shield-lock me-2"></i>Admin Panel</a>
     </div>
   </div>
@@ -251,8 +293,18 @@
   <!-- Main Content -->
   <div class="flex-grow-1">
     <div class="topbar d-flex align-items-center justify-content-between">
-      <h6 class="mb-0 fw-semibold text-muted">{% block page_title %}{% endblock %}</h6>
-      <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i>Organ Donation Registry System</span>
+      <div class="topbar-brand">
+        <span class="topbar-logo"><i class="bi bi-heart-pulse-fill"></i></span>
+        <div>
+          <div class="fw-bold text-primary">MediTransplant Console</div>
+          <div class="topbar-subtitle">{% block page_title %}{% endblock %}</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'donor_create' %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-heart me-1"></i>Add Donor</a>
+        <a href="{% url 'recipient_create' %}" class="btn btn-sm btn-outline-success"><i class="bi bi-person-plus me-1"></i>Add Recipient</a>
+        <a href="{% url 'auto_match' %}" class="btn btn-sm btn-primary"><i class="bi bi-activity me-1"></i>Run Match</a>
+      </div>
     </div>
     <div class="content-area">
       {% if messages %}
