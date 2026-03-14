@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+
+def _env_list(name, default=''):
+    raw_value = os.environ.get(name, default)
+    return [item.strip() for item in raw_value.split(',') if item.strip()]
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +31,27 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ocu54$en#d7@=297@&6s#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')
+
+RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '').strip()
+if RAILWAY_PUBLIC_DOMAIN and RAILWAY_PUBLIC_DOMAIN not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+CSRF_TRUSTED_ORIGINS = _env_list('CSRF_TRUSTED_ORIGINS')
+for host in ALLOWED_HOSTS:
+    if host != '*' and '://' not in host:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
+
+# Railway sits behind a proxy, so trust forwarded scheme/host headers.
+if RAILWAY_PUBLIC_DOMAIN:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
+
+# Keep order while removing duplicates.
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(CSRF_TRUSTED_ORIGINS))
 
 
 # Application definition
