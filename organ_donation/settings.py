@@ -18,6 +18,26 @@ def _env_list(name, default=''):
     raw_value = os.environ.get(name, default)
     return [item.strip() for item in raw_value.split(',') if item.strip()]
 
+
+def _normalize_host(host):
+    host = host.strip()
+    if not host:
+        return ''
+    if '://' in host:
+        host = host.split('://', 1)[1]
+    return host.split('/', 1)[0]
+
+
+def _normalize_origin(origin):
+    origin = origin.strip()
+    if not origin:
+        return ''
+    if origin.startswith('http://') or origin.startswith('https://'):
+        return origin.rstrip('/')
+    if origin.startswith('.'):
+        return f'https://*{origin.rstrip("/")}'
+    return f'https://{origin.rstrip("/")}'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,7 +51,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-ocu54$en#d7@=297@&6s#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')
+ALLOWED_HOSTS = [_normalize_host(h) for h in _env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')]
+ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
 
 RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '').strip()
 if RAILWAY_PUBLIC_DOMAIN and RAILWAY_PUBLIC_DOMAIN not in ALLOWED_HOSTS:
@@ -40,7 +61,8 @@ if RAILWAY_PUBLIC_DOMAIN and RAILWAY_PUBLIC_DOMAIN not in ALLOWED_HOSTS:
 if not ALLOWED_HOSTS:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-CSRF_TRUSTED_ORIGINS = _env_list('CSRF_TRUSTED_ORIGINS')
+CSRF_TRUSTED_ORIGINS = [_normalize_origin(o) for o in _env_list('CSRF_TRUSTED_ORIGINS')]
+CSRF_TRUSTED_ORIGINS = [o for o in CSRF_TRUSTED_ORIGINS if o]
 for host in ALLOWED_HOSTS:
     if host != '*' and '://' not in host:
         CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
