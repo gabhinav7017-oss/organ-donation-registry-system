@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organ Donation Registry</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: rgba(255, 255, 255, 0.92);
+      --text: #16324f;
+      --muted: #5f748b;
+      --primary: #2563eb;
+      --secondary: #14b8a6;
+      --line: #dbe4f0;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.14), transparent 30%),
+        radial-gradient(circle at 100% 0%, rgba(20, 184, 166, 0.14), transparent 32%),
+        var(--bg);
+      padding: 24px;
+    }
+
+    .card {
+      width: min(720px, 100%);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 32px;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 20px 0 12px;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: #fff;
+    }
+
+    .button-secondary {
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .note {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(37, 99, 235, 0.06);
+      border: 1px solid rgba(37, 99, 235, 0.14);
+      color: #36506b;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="badge">Organ Donation Registry</div>
+    <h1>GitHub Pages is active.</h1>
+    <p>This repository contains a Django application. GitHub Pages can only host static files, so it cannot run the full donor, recipient, and matching system by itself.</p>
+    <p>Use this page as a public landing page, and deploy the actual application on Render, Railway, or PythonAnywhere.</p>
+
+    <div class="actions">
+      <a class="button button-primary" href="https://github.com/gabhinav7017-oss/organ-donation-registry-system">View Source Code</a>
+      <a class="button button-secondary" href="https://render.com/">Deploy on Render</a>
+    </div>
+
+    <div class="note">
+      To make this GitHub Pages URL open the live app directly, replace one of the links above with your deployed Render URL after the Render deployment is live.
+    </div>
+  </main>
+</body>
+</html>
