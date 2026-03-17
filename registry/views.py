@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
 import hashlib
 from .models import Donor, Recipient, OrganMatch, BLOOD_COMPATIBILITY, BLOOD_TYPE_CHOICES, ORGAN_CHOICES, MATCH_STATUS_CHOICES
@@ -11,7 +10,6 @@ from .forms import DonorForm, RecipientForm, OrganMatchForm
 #  Dashboard
 # ──────────────────────────────────────────────
 
-@login_required
 def dashboard(request):
     def hashed_coordinate(seed_text, min_lat=28.35, max_lat=28.90, min_lng=76.85, max_lng=77.45):
         digest = hashlib.sha256(seed_text.encode('utf-8')).hexdigest()
@@ -254,7 +252,6 @@ def dashboard(request):
 #  Donor Views
 # ──────────────────────────────────────────────
 
-@login_required
 def donor_list(request):
     query = request.GET.get('q', '')
     blood_type = request.GET.get('blood_type', '')
@@ -277,14 +274,12 @@ def donor_list(request):
     })
 
 
-@login_required
 def donor_detail(request, pk):
     donor = get_object_or_404(Donor, pk=pk)
     matches = OrganMatch.objects.filter(donor=donor).select_related('recipient')
     return render(request, 'registry/donor_detail.html', {'donor': donor, 'matches': matches})
 
 
-@login_required
 def donor_create(request):
     if request.method == 'POST':
         form = DonorForm(request.POST)
@@ -297,7 +292,6 @@ def donor_create(request):
     return render(request, 'registry/donor_form.html', {'form': form, 'title': 'Register Donor'})
 
 
-@login_required
 def donor_edit(request, pk):
     donor = get_object_or_404(Donor, pk=pk)
     if request.method == 'POST':
@@ -311,7 +305,6 @@ def donor_edit(request, pk):
     return render(request, 'registry/donor_form.html', {'form': form, 'title': 'Edit Donor', 'donor': donor})
 
 
-@login_required
 def donor_delete(request, pk):
     donor = get_object_or_404(Donor, pk=pk)
     if request.method == 'POST':
@@ -325,7 +318,6 @@ def donor_delete(request, pk):
 #  Recipient Views
 # ──────────────────────────────────────────────
 
-@login_required
 def recipient_list(request):
     query = request.GET.get('q', '')
     blood_type = request.GET.get('blood_type', '')
@@ -353,14 +345,12 @@ def recipient_list(request):
     })
 
 
-@login_required
 def recipient_detail(request, pk):
     recipient = get_object_or_404(Recipient, pk=pk)
     matches = OrganMatch.objects.filter(recipient=recipient).select_related('donor')
     return render(request, 'registry/recipient_detail.html', {'recipient': recipient, 'matches': matches})
 
 
-@login_required
 def recipient_create(request):
     if request.method == 'POST':
         form = RecipientForm(request.POST)
@@ -373,7 +363,6 @@ def recipient_create(request):
     return render(request, 'registry/recipient_form.html', {'form': form, 'title': 'Register Recipient'})
 
 
-@login_required
 def recipient_edit(request, pk):
     recipient = get_object_or_404(Recipient, pk=pk)
     if request.method == 'POST':
@@ -389,7 +378,6 @@ def recipient_edit(request, pk):
     })
 
 
-@login_required
 def recipient_delete(request, pk):
     recipient = get_object_or_404(Recipient, pk=pk)
     if request.method == 'POST':
@@ -403,7 +391,6 @@ def recipient_delete(request, pk):
 #  Organ Matching Views
 # ──────────────────────────────────────────────
 
-@login_required
 def match_list(request):
     status_filter = request.GET.get('status', '')
     matches = OrganMatch.objects.select_related('donor', 'recipient').all()
@@ -416,13 +403,11 @@ def match_list(request):
     })
 
 
-@login_required
 def match_detail(request, pk):
     match = get_object_or_404(OrganMatch.objects.select_related('donor', 'recipient'), pk=pk)
     return render(request, 'registry/match_detail.html', {'match': match})
 
 
-@login_required
 def match_create(request):
     if request.method == 'POST':
         form = OrganMatchForm(request.POST)
@@ -435,7 +420,6 @@ def match_create(request):
     return render(request, 'registry/match_form.html', {'form': form, 'title': 'Create Match'})
 
 
-@login_required
 def match_edit(request, pk):
     match = get_object_or_404(OrganMatch, pk=pk)
     if request.method == 'POST':
@@ -449,7 +433,6 @@ def match_edit(request, pk):
     return render(request, 'registry/match_form.html', {'form': form, 'title': 'Edit Match', 'match': match})
 
 
-@login_required
 def match_delete(request, pk):
     match = get_object_or_404(OrganMatch, pk=pk)
     if request.method == 'POST':
@@ -459,7 +442,6 @@ def match_delete(request, pk):
     return render(request, 'registry/confirm_delete.html', {'object': match, 'type': 'Match'})
 
 
-@login_required
 def auto_match(request):
     """Auto-match active recipients with compatible active donors."""
     recipients = Recipient.objects.filter(status='Active')
