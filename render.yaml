@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
-    startCommand: gunicorn --bind 0.0.0.0:10000 organ_donation.wsgi:application --workers 2 --worker-class sync --timeout 60 --access-logfile - --error-logfile -
+    startCommand: python -m gunicorn organ_donation.wsgi --bind 0.0.0.0:$PORT
     envVars:
       - key: DEBUG
         value: "False"
@@ -12,5 +12,3 @@ services:
         value: 3.11.12
       - key: SECRET_KEY
         generateValue: true
-      - key: PORT
-        value: "10000"
