@@ -54,9 +54,15 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [_normalize_host(h) for h in _env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')]
 ALLOWED_HOSTS = [h for h in ALLOWED_HOSTS if h]
 
-RAILWAY_PUBLIC_DOMAIN = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '').strip()
-if RAILWAY_PUBLIC_DOMAIN and RAILWAY_PUBLIC_DOMAIN not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(RAILWAY_PUBLIC_DOMAIN)
+PUBLIC_HOSTS = [
+    os.environ.get('RAILWAY_PUBLIC_DOMAIN', '').strip(),
+    os.environ.get('RENDER_EXTERNAL_HOSTNAME', '').strip(),
+]
+
+for public_host in PUBLIC_HOSTS:
+    normalized_host = _normalize_host(public_host)
+    if normalized_host and normalized_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(normalized_host)
 
 if not ALLOWED_HOSTS:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
@@ -67,8 +73,8 @@ for host in ALLOWED_HOSTS:
     if host != '*' and '://' not in host:
         CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
 
-# Railway sits behind a proxy, so trust forwarded scheme/host headers.
-if RAILWAY_PUBLIC_DOMAIN:
+# Managed hosts like Railway/Render sit behind a proxy, so trust forwarded headers.
+if any(PUBLIC_HOSTS):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     USE_X_FORWARDED_HOST = True
 
