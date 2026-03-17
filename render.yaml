@@ -3,8 +3,8 @@ services:
     name: organ-donation-system
     runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
-    startCommand: gunicorn organ_donation.wsgi:application
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput && chmod +x start.sh
+    startCommand: ./start.sh
     envVars:
       - key: DEBUG
         value: "False"
